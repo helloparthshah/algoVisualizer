@@ -11,23 +11,44 @@ function setup() {
 
   dfs = createButton("DFS");
   dfs.mousePressed(() => {
-    grid.clr();
-    grid.dfs();
+    if (!grid.isFinding) {
+      grid.isFinding = true;
+      dfs.style("background-color", "red");
+      grid.clr();
+      grid.dfs().then(() => {
+        dfs.style("background-color", "");
+        grid.isFinding = false;
+      });
+    }
   });
 
   bfs = createButton("BFS");
   bfs.mousePressed(() => {
-    grid.clr();
-    grid.bfs();
+    if (!grid.isFinding) {
+      grid.isFinding = true;
+      bfs.style("background-color", "red");
+      grid.clr();
+      grid.bfs().then(() => {
+        bfs.style("background-color", "");
+        grid.isFinding = false;
+      });
+    }
   });
 
   gbfs = createButton("Greedy BFS");
   gbfs.mousePressed(() => {
-    grid.clr();
-    grid.gbfs();
+    if (!grid.isFinding) {
+      grid.isFinding = true;
+      gbfs.style("background-color", "red");
+      grid.clr();
+      grid.gbfs().then(() => {
+        gbfs.style("background-color", "");
+        grid.isFinding = false;
+      });
+    }
   });
 
-  grid = new Grid(50, 50, 0, 0, 49, 49);
+  grid = new Grid(20, 20, 0, 0, 19, 19);
   pixelDensity(1);
 }
 

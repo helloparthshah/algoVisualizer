@@ -6,6 +6,8 @@ function Grid(rows, cols, x1, y1, x2, y2) {
   this.start = createVector(x1, y1);
   this.end = createVector(x2, y2);
 
+  this.isFinding = false;
+
   this.nodes = [];
 
   for (i = 0; i < rows; i++) {
@@ -87,7 +89,6 @@ function Grid(rows, cols, x1, y1, x2, y2) {
       for (k = 0; k < 4; k++) {
         dx = curNode.x + X[k];
         dy = curNode.y + Y[k];
-
         if (
           dx >= 0 &&
           dx < this.rows &&
@@ -105,34 +106,6 @@ function Grid(rows, cols, x1, y1, x2, y2) {
     await this.showPath();
   };
 
-  /*  this.dfs = async function (i, j) {
-    if (this.nodes[i][j] === this.nodes[this.end.x][this.end.y]) {
-      await this.showPath();
-      return true;
-    }
-
-    this.nodes[i][j].isVisited = true;
-    await sleep(1);
-    for (k = 0; k < 4; k++) {
-      dx = i + X[k];
-      dy = j + Y[k];
-
-      if (
-        dx >= 0 &&
-        dx < this.rows &&
-        dy >= 0 &&
-        dy < this.cols &&
-        !this.nodes[dx][dy].isVisited &&
-        !this.nodes[dx][dy].isWall
-      ) {
-        this.nodes[dx][dy].parent = this.nodes[i][j];
-        if (this.dfs(dx, dy)) return true;
-      }
-    }
-
-    return false;
-  }; */
-
   this.bfs = async function () {
     this.nodes[this.start.x][this.start.y].isVisited = true;
     var queue = [];
@@ -148,7 +121,6 @@ function Grid(rows, cols, x1, y1, x2, y2) {
       for (k = 0; k < 4; k++) {
         dx = curNode.x + X[k];
         dy = curNode.y + Y[k];
-
         if (
           dx >= 0 &&
           dx < this.rows &&
@@ -185,7 +157,6 @@ function Grid(rows, cols, x1, y1, x2, y2) {
       for (k = 0; k < 4; k++) {
         dx = curNode.x + X[k];
         dy = curNode.y + Y[k];
-
         if (
           dx >= 0 &&
           dx < this.rows &&
