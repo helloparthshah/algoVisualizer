@@ -11,7 +11,7 @@ function Grid(rows, cols, x1, y1, x2, y2) {
   for (i = 0; i < rows; i++) {
     this.nodes[i] = [];
     for (j = 0; j < cols; j++) {
-      this.nodes[i][j] = new Node(i, j, this.size);
+      this.nodes[i][j] = new Node(i, j, this.size, dist(i, j, x2, y2));
     }
   }
 
@@ -166,12 +166,53 @@ function Grid(rows, cols, x1, y1, x2, y2) {
 
     await this.showPath();
   };
+
+  this.gbfs = async function () {
+    this.nodes[this.start.x][this.start.y].isVisited = true;
+    var queue = [];
+
+    queue.push(this.nodes[this.start.x][this.start.y]);
+
+    while (queue.length > 0) {
+      var curNode = queue.reduce(function (a, b) {
+        return a.dist > b.dist ? a : b;
+      }, 0);
+      queue.splice(
+        queue.findIndex((a) => a === curNode),
+        1
+      );
+      //   var curNode = queue.shift();
+      if (curNode === this.nodes[this.end.x][this.end.y]) break;
+
+      await sleep(1);
+      for (k = 0; k < 4; k++) {
+        dx = curNode.x + X[k];
+        dy = curNode.y + Y[k];
+
+        if (
+          dx >= 0 &&
+          dx < this.rows &&
+          dy >= 0 &&
+          dy < this.cols &&
+          !this.nodes[dx][dy].isVisited &&
+          !this.nodes[dx][dy].isWall
+        ) {
+          this.nodes[dx][dy].isVisited = true;
+          this.nodes[dx][dy].parent = curNode;
+          queue.push(this.nodes[dx][dy]);
+        }
+      }
+    }
+
+    await this.showPath();
+  };
 }
 
-function Node(x, y, size) {
+function Node(x, y, size, dist) {
   this.x = x;
   this.y = y;
   this.size = size;
+  this.dist = dist;
 
   this.parent;
   this.isStart = false;

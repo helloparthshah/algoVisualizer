@@ -21,6 +21,12 @@ function setup() {
     grid.bfs();
   });
 
+  gbfs = createButton("gbfs");
+  gbfs.mousePressed(() => {
+    grid.clr();
+    grid.gbfs();
+  });
+
   grid = new Grid(20, 20, 0, 0, 19, 19);
   pixelDensity(1);
 }
@@ -33,7 +39,7 @@ function mouseClicked() {
   wallMode = grid.getMode(mouseX, mouseY);
   grid.onClick(mouseX, mouseY, wallMode);
 }
-  
+
 function mousePressed() {
   wallMode = grid.getMode(mouseX, mouseY);
 }
