@@ -171,7 +171,6 @@ function Grid(rows, cols, x1, y1, x2, y2) {
         }
       }
     }
-
     await this.showPath();
   };
 }
@@ -192,11 +191,11 @@ function Node(x, y, size, dist) {
   this.display = function () {
     if (this.isStart) fill(0, 255, 0);
     else if (this.isEnd) fill(255, 0, 0);
-    else if (this.isWall) fill(100);
-    else if (this.isPath) fill(0, 0, 255);
-    else if (this.isVisited) fill(255, 255, 0);
+    else if (this.isWall) fill(12, 53, 71);
+    else if (this.isPath) fill(255, 254, 106);
+    else if (this.isVisited) fill(0, 190, 218);
     else noFill();
-    stroke(0);
+    stroke(175, 216, 248);
     rect(this.x * this.size, this.y * this.size, this.size, this.size);
   };
 }
