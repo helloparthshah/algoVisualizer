@@ -103,6 +103,28 @@ function Grid(rows, cols, x1, y1, x2, y2) {
       }
     });
   };
+
+  this.dfs = async function () {
+    // Put the start node in the queue
+    this.nodes[this.start.x][this.start.y].isVisited = true;
+    var queue = [];
+
+    queue.push(this.nodes[this.start.x][this.start.y]);
+
+    while (queue.length != 0) {
+      var curNode = queue.pop();
+      if (curNode == this.nodes[this.end.x][this.end.y]) break;
+      for (k = 0; k < 4; k++) {
+        dx = i + X[k];
+        dy = j + Y[k];
+        sleep(1).then(() => {
+          this.nodes[dx][dy].isVisited = true;
+          this.nodes[dx][dy].parent = curNode;
+          queue.push(this.nodes[dx][dy]);
+        });
+      }
+    }
+  };
 }
 
 function Node(x, y, size) {
