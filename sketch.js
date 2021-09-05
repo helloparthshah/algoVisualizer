@@ -13,7 +13,7 @@ function setup() {
     grid.dfs(0, 0);
   });
 
-  grid = new Grid(10, 10, 0, 0, 9, 9);
+  grid = new Grid(50, 50, 0, 0, 49, 49);
 }
 
 function sleep(millisecondsDuration) {
