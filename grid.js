@@ -54,6 +54,7 @@ function Grid(rows, cols, x1, y1, x2, y2) {
     this.pathFound = false;
     for (i = 0; i < rows; i++) {
       for (j = 0; j < cols; j++) {
+        this.nodes[i][j].parent = null;
         this.nodes[i][j].isVisited = false;
         this.nodes[i][j].isPath = false;
       }
@@ -63,7 +64,7 @@ function Grid(rows, cols, x1, y1, x2, y2) {
   this.showPath = async function () {
     var n = this.nodes[this.end.x][this.end.y];
     while (n && n.parent) {
-      await sleep(50);
+      await sleep(5);
 
       n.isPath = true;
       n = n.parent;
@@ -79,28 +80,28 @@ function Grid(rows, cols, x1, y1, x2, y2) {
 
     if (this.nodes[i][j] === this.nodes[this.end.x][this.end.y]) {
       this.pathFound = true;
-      this.showPath();
+      await this.showPath();
       return;
     }
 
     this.nodes[i][j].isVisited = true;
-    await sleep(20);
+    sleep(1).then(() => {
+      for (k = 0; k < 4; k++) {
+        dx = i + X[k];
+        dy = j + Y[k];
 
-    for (k = 0; k < 4; k++) {
-      dx = i + X[k];
-      dy = j + Y[k];
-
-      if (
-        dx >= 0 &&
-        dx < this.rows &&
-        dy >= 0 &&
-        dy < this.cols &&
-        !this.nodes[dx][dy].isVisited
-      ) {
-        this.nodes[dx][dy].parent = this.nodes[i][j];
-        this.dfs(dx, dy);
+        if (
+          dx >= 0 &&
+          dx < this.rows &&
+          dy >= 0 &&
+          dy < this.cols &&
+          !this.nodes[dx][dy].isVisited
+        ) {
+          this.nodes[dx][dy].parent = this.nodes[i][j];
+          this.dfs(dx, dy);
+        }
       }
-    }
+    });
   };
 }
 
@@ -110,9 +111,9 @@ function Node(x, y, size) {
   this.size = size;
 
   this.parent;
-  this.isPath = false;
   this.isStart = false;
   this.isEnd = false;
+  this.isPath = false;
   this.isVisited = false;
   this.isWall = false;
 

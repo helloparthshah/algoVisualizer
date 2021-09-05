@@ -29,9 +29,11 @@ function mouseClicked() {
 function draw() {
   // put drawing code here
   if (mouseIsPressed) {
-    // grid.clr();
-    // grid.dfs(0, 0);
-    grid.onClick(mouseX, mouseY, wallMode);
+    if (mouseX >= 0 && mouseX <= width && mouseY >= 0 && mouseY <= height) {
+      // grid.clr();
+      // grid.dfs(0, 0);
+      grid.onClick(mouseX, mouseY, wallMode);
+    }
   }
   background(220);
   grid.display();
