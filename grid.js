@@ -196,6 +196,6 @@ function Node(x, y, size, dist) {
     else if (this.isVisited) fill(0, 190, 218);
     else noFill();
     stroke(175, 216, 248);
-    rect(this.x * this.size, this.y * this.size, this.size, this.size);
+    square(this.x * this.size, this.y * this.size, this.size);
   };
 }

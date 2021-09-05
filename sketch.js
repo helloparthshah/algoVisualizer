@@ -73,6 +73,7 @@ function mouseDragged() {
 
 function draw() {
   // put drawing code here
-  background(255);
+  // background(255);
+  clear();
   grid.display();
 }
