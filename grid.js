@@ -43,7 +43,6 @@ function Grid(rows, cols, x1, y1, x2, y2) {
           floor((y / height) * this.cols)
         ].isEnd
       ) {
-        print(wallMode);
         this.nodes[floor((x / width) * this.rows)][
           floor((y / height) * this.cols)
         ].isWall = wallMode;
