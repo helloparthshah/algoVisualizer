@@ -27,7 +27,7 @@ function setup() {
     grid.gbfs();
   });
 
-  grid = new Grid(20, 20, 0, 0, 19, 19);
+  grid = new Grid(50, 50, 0, 0, 49, 49);
   pixelDensity(1);
 }
 
