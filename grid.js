@@ -174,14 +174,11 @@ function Grid(rows, cols, x1, y1, x2, y2) {
     queue.push(this.nodes[this.start.x][this.start.y]);
 
     while (queue.length > 0) {
-      var curNode = queue.reduce(function (a, b) {
-        return a.dist > b.dist ? a : b;
-      }, 0);
-      queue.splice(
-        queue.findIndex((a) => a === curNode),
-        1
-      );
-      //   var curNode = queue.shift();
+      queue.sort((a, b) => {
+        return a.dist > b.dist ? 1 : b.dist > a.dist ? -1 : 0;
+      });
+
+      var curNode = queue.shift();
       if (curNode === this.nodes[this.end.x][this.end.y]) break;
 
       await sleep(1);

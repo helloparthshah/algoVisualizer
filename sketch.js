@@ -9,19 +9,19 @@ function setup() {
   // put setup code here
   createCanvas(800, 800);
 
-  dfs = createButton("dfs");
+  dfs = createButton("DFS");
   dfs.mousePressed(() => {
     grid.clr();
     grid.dfs();
   });
 
-  bfs = createButton("bfs");
+  bfs = createButton("BFS");
   bfs.mousePressed(() => {
     grid.clr();
     grid.bfs();
   });
 
-  gbfs = createButton("gbfs");
+  gbfs = createButton("Greedy BFS");
   gbfs.mousePressed(() => {
     grid.clr();
     grid.gbfs();
