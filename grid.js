@@ -104,7 +104,7 @@ function Grid(rows, cols, x1, y1, x2, y2) {
     });
   };
 
-  this.dfs = async function () {
+  this.bfs = async function () {
     // Put the start node in the queue
     this.nodes[this.start.x][this.start.y].isVisited = true;
     var queue = [];
