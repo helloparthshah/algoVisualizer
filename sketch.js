@@ -3,7 +3,7 @@ p5.disableFriendlyErrors = true;
 
 var grid;
 
-var wallMode = false;
+var wallMode = true;
 
 function setup() {
   // put setup code here
@@ -12,7 +12,7 @@ function setup() {
   dfs = createButton("dfs");
   dfs.mousePressed(() => {
     grid.clr();
-    grid.dfs(0, 0);
+    grid.dfs();
   });
 
   bfs = createButton("bfs");
@@ -25,25 +25,27 @@ function setup() {
   pixelDensity(1);
 }
 
-function sleep(millisecondsDuration) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, millisecondsDuration);
-  });
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 function mouseClicked() {
   wallMode = grid.getMode(mouseX, mouseY);
+  grid.onClick(mouseX, mouseY, wallMode);
+}
+  
+function mousePressed() {
+  wallMode = grid.getMode(mouseX, mouseY);
+}
+
+function mouseDragged() {
+  if (mouseX >= 0 && mouseX <= width && mouseY >= 0 && mouseY <= height) {
+    grid.onClick(mouseX, mouseY, wallMode);
+  }
 }
 
 function draw() {
   // put drawing code here
-  if (mouseIsPressed) {
-    if (mouseX >= 0 && mouseX <= width && mouseY >= 0 && mouseY <= height) {
-      // grid.clr();
-      // grid.dfs(0, 0);
-      grid.onClick(mouseX, mouseY, wallMode);
-    }
-  }
-  background(220);
+  background(255);
   grid.display();
 }

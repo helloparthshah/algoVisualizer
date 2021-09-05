@@ -42,10 +42,12 @@ function Grid(rows, cols, x1, y1, x2, y2) {
         !this.nodes[floor((x / width) * this.rows)][
           floor((y / height) * this.cols)
         ].isEnd
-      )
+      ) {
+        print(wallMode);
         this.nodes[floor((x / width) * this.rows)][
           floor((y / height) * this.cols)
         ].isWall = wallMode;
+      }
   };
 
   this.clr = function () {
@@ -71,7 +73,7 @@ function Grid(rows, cols, x1, y1, x2, y2) {
   let X = [0, 1, 0, -1];
   let Y = [-1, 0, 1, 0];
 
-  this.dfs = async function (i, j) {
+  this.dfs = async function () {
     this.nodes[this.start.x][this.start.y].isVisited = true;
     var stack = [];
 
@@ -82,7 +84,7 @@ function Grid(rows, cols, x1, y1, x2, y2) {
 
       if (curNode === this.nodes[this.end.x][this.end.y]) break;
 
-      await sleep(1);
+      await sleep(10);
       for (k = 0; k < 4; k++) {
         dx = curNode.x + X[k];
         dy = curNode.y + Y[k];
