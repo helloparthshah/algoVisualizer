@@ -1,4 +1,6 @@
 // For it to run you need a local server (check: https://github.com/processing/p5.js/wiki/Local-server)
+p5.disableFriendlyErrors = true;
+
 var grid;
 
 var wallMode = false;
@@ -7,13 +9,20 @@ function setup() {
   // put setup code here
   createCanvas(800, 800);
 
-  button = createButton("start");
-  button.mousePressed(() => {
+  dfs = createButton("dfs");
+  dfs.mousePressed(() => {
     grid.clr();
     grid.dfs(0, 0);
   });
 
-  grid = new Grid(50, 50, 0, 0, 49, 49);
+  bfs = createButton("bfs");
+  bfs.mousePressed(() => {
+    grid.clr();
+    grid.bfs();
+  });
+
+  grid = new Grid(20, 20, 0, 0, 19, 19);
+  pixelDensity(1);
 }
 
 function sleep(millisecondsDuration) {

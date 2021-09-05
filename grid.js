@@ -6,8 +6,6 @@ function Grid(rows, cols, x1, y1, x2, y2) {
   this.start = createVector(x1, y1);
   this.end = createVector(x2, y2);
 
-  this.pathFound = false;
-
   this.nodes = [];
 
   for (i = 0; i < rows; i++) {
@@ -51,7 +49,6 @@ function Grid(rows, cols, x1, y1, x2, y2) {
   };
 
   this.clr = function () {
-    this.pathFound = false;
     for (i = 0; i < rows; i++) {
       for (j = 0; j < cols; j++) {
         this.nodes[i][j].parent = null;
@@ -64,10 +61,10 @@ function Grid(rows, cols, x1, y1, x2, y2) {
   this.showPath = async function () {
     var n = this.nodes[this.end.x][this.end.y];
     while (n && n.parent) {
-      await sleep(5);
-
-      n.isPath = true;
-      n = n.parent;
+      await sleep(5).then(() => {
+        n.isPath = true;
+        n = n.parent;
+      });
     }
   };
 
@@ -75,61 +72,104 @@ function Grid(rows, cols, x1, y1, x2, y2) {
   let Y = [-1, 0, 1, 0];
 
   this.dfs = async function (i, j) {
-    if (this.pathFound) return;
-    if (this.nodes[i][j].isVisited || this.nodes[i][j].isWall) return;
+    this.nodes[this.start.x][this.start.y].isVisited = true;
+    var stack = [];
 
-    if (this.nodes[i][j] === this.nodes[this.end.x][this.end.y]) {
-      this.pathFound = true;
-      await this.showPath();
-      return;
-    }
+    stack.push(this.nodes[this.start.x][this.start.y]);
 
-    this.nodes[i][j].isVisited = true;
-    sleep(1).then(() => {
+    while (stack.length > 0) {
+      var curNode = stack.pop();
+
+      if (curNode === this.nodes[this.end.x][this.end.y]) break;
+
+      await sleep(1);
       for (k = 0; k < 4; k++) {
-        dx = i + X[k];
-        dy = j + Y[k];
+        dx = curNode.x + X[k];
+        dy = curNode.y + Y[k];
 
         if (
           dx >= 0 &&
           dx < this.rows &&
           dy >= 0 &&
           dy < this.cols &&
-          !this.nodes[dx][dy].isVisited
+          !this.nodes[dx][dy].isVisited &&
+          !this.nodes[dx][dy].isWall
         ) {
-          this.nodes[dx][dy].parent = this.nodes[i][j];
-          this.dfs(dx, dy);
+          this.nodes[dx][dy].isVisited = true;
+          this.nodes[dx][dy].parent = curNode;
+          stack.push(this.nodes[dx][dy]);
         }
       }
-    });
+    }
+    await this.showPath();
   };
 
+  /*  this.dfs = async function (i, j) {
+    if (this.nodes[i][j] === this.nodes[this.end.x][this.end.y]) {
+      await this.showPath();
+      return true;
+    }
+
+    this.nodes[i][j].isVisited = true;
+    await sleep(1);
+    for (k = 0; k < 4; k++) {
+      dx = i + X[k];
+      dy = j + Y[k];
+
+      if (
+        dx >= 0 &&
+        dx < this.rows &&
+        dy >= 0 &&
+        dy < this.cols &&
+        !this.nodes[dx][dy].isVisited &&
+        !this.nodes[dx][dy].isWall
+      ) {
+        this.nodes[dx][dy].parent = this.nodes[i][j];
+        if (this.dfs(dx, dy)) return true;
+      }
+    }
+
+    return false;
+  }; */
+
   this.bfs = async function () {
-    // Put the start node in the queue
     this.nodes[this.start.x][this.start.y].isVisited = true;
     var queue = [];
 
     queue.push(this.nodes[this.start.x][this.start.y]);
 
-    while (queue.length != 0) {
-      var curNode = queue.pop();
-      if (curNode == this.nodes[this.end.x][this.end.y]) break;
+    while (queue.length > 0) {
+      var curNode = queue.shift();
+
+      if (curNode === this.nodes[this.end.x][this.end.y]) break;
+
+      await sleep(1);
       for (k = 0; k < 4; k++) {
-        dx = i + X[k];
-        dy = j + Y[k];
-        sleep(1).then(() => {
+        dx = curNode.x + X[k];
+        dy = curNode.y + Y[k];
+
+        if (
+          dx >= 0 &&
+          dx < this.rows &&
+          dy >= 0 &&
+          dy < this.cols &&
+          !this.nodes[dx][dy].isVisited &&
+          !this.nodes[dx][dy].isWall
+        ) {
           this.nodes[dx][dy].isVisited = true;
           this.nodes[dx][dy].parent = curNode;
           queue.push(this.nodes[dx][dy]);
-        });
+        }
       }
     }
+
+    await this.showPath();
   };
 }
 
 function Node(x, y, size) {
-  this.x = x * size;
-  this.y = y * size;
+  this.x = x;
+  this.y = y;
   this.size = size;
 
   this.parent;
@@ -147,6 +187,6 @@ function Node(x, y, size) {
     else if (this.isVisited) fill(255, 255, 0);
     else noFill();
     stroke(0);
-    rect(this.x, this.y, this.size, this.size);
+    rect(this.x * this.size, this.y * this.size, this.size, this.size);
   };
 }
