@@ -25,9 +25,10 @@
       border: none;
       color: white;
       padding: 15px 32px;
+      width: 200px;
       text-align: center;
       text-decoration: none;
-      margin: 2px;
+      margin: 10px;
       font-size: 12px;
       cursor: pointer;
       border-radius: 5px;
@@ -35,8 +36,15 @@
     }
 
     button:hover {
-
       background-color: #409443;
+    }
+
+    #nav {
+      width: 100vw;
+      background-color: #282A35;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js"></script>
@@ -45,6 +53,12 @@
 </head>
 
 <body>
+  <div id="nav">
+    <button onclick="vis(0)">Reset</button>
+    <button onclick="vis(1)">DFS</button>
+    <button onclick="vis(2)">BFS</button>
+    <button onclick="vis(3)">Greedy BFS</button>
+  </div>
 </body>
 
 </html>

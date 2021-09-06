@@ -8,50 +8,37 @@ var wallMode = true;
 function setup() {
   // put setup code here
   createCanvas(800, 800);
-
-  dfs = createButton("DFS");
-  dfs.mousePressed(() => {
-    if (!grid.isFinding) {
-      grid.isFinding = true;
-      dfs.style("background-color", "red");
-      grid.clr();
-      grid.dfs().then(() => {
-        dfs.style("background-color", "");
-        grid.isFinding = false;
-      });
-    }
-  });
-
-  bfs = createButton("BFS");
-  bfs.mousePressed(() => {
-    if (!grid.isFinding) {
-      grid.isFinding = true;
-      bfs.style("background-color", "red");
-      grid.clr();
-      grid.bfs().then(() => {
-        bfs.style("background-color", "");
-        grid.isFinding = false;
-      });
-    }
-  });
-
-  gbfs = createButton("Greedy BFS");
-  gbfs.mousePressed(() => {
-    if (!grid.isFinding) {
-      grid.isFinding = true;
-      gbfs.style("background-color", "red");
-      grid.clr();
-      grid.gbfs().then(() => {
-        gbfs.style("background-color", "");
-        grid.isFinding = false;
-      });
-    }
-  });
-
   grid = new Grid(20, 20, 0, 0, 19, 19);
   pixelDensity(1);
 }
 
+function vis(i) {
+  if (!grid.isFinding) {
+    if (i == 0) {
+      grid.reset();
+      return;
+    }
+    grid.isFinding = true;
+    b = document.getElementsByTagName("button")[i];
+    b.style.backgroundColor = "red";
+    grid.clr();
+    if (i == 1)
+      grid.dfs().then(() => {
+        b.style.backgroundColor = "";
+        grid.isFinding = false;
+      });
+    else if (i == 2)
+      grid.bfs().then(() => {
+        b.style.backgroundColor = "";
+        grid.isFinding = false;
+      });
+    else if (i == 3)
+      grid.gbfs().then(() => {
+        b.style.backgroundColor = "";
+        grid.isFinding = false;
+      });
+  }
+}
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
