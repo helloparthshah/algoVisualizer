@@ -47,7 +47,7 @@ function Grid(rows, cols, x1, y1, x2, y2) {
       ) {
         this.nodes[floor((x / width) * this.rows)][
           floor((y / height) * this.cols)
-        ].isWall = wallMode;
+        ].setWall(wallMode);
       }
   };
 
@@ -65,7 +65,7 @@ function Grid(rows, cols, x1, y1, x2, y2) {
     var n = this.nodes[this.end.x][this.end.y];
     while (n && n.parent) {
       await sleep(5).then(() => {
-        n.isPath = true;
+        n.setPath(true);
         n = n.parent;
       });
     }
@@ -75,7 +75,7 @@ function Grid(rows, cols, x1, y1, x2, y2) {
   let Y = [-1, 0, 1, 0];
 
   this.dfs = async function () {
-    this.nodes[this.start.x][this.start.y].isVisited = true;
+    this.nodes[this.start.x][this.start.y].setVisited(true);
     var stack = [];
 
     stack.push(this.nodes[this.start.x][this.start.y]);
@@ -97,7 +97,7 @@ function Grid(rows, cols, x1, y1, x2, y2) {
           !this.nodes[dx][dy].isVisited &&
           !this.nodes[dx][dy].isWall
         ) {
-          this.nodes[dx][dy].isVisited = true;
+          this.nodes[dx][dy].setVisited(true);
           this.nodes[dx][dy].parent = curNode;
           stack.push(this.nodes[dx][dy]);
         }
@@ -107,7 +107,7 @@ function Grid(rows, cols, x1, y1, x2, y2) {
   };
 
   this.bfs = async function () {
-    this.nodes[this.start.x][this.start.y].isVisited = true;
+    this.nodes[this.start.x][this.start.y].setVisited(true);
     var queue = [];
 
     queue.push(this.nodes[this.start.x][this.start.y]);
@@ -129,7 +129,7 @@ function Grid(rows, cols, x1, y1, x2, y2) {
           !this.nodes[dx][dy].isVisited &&
           !this.nodes[dx][dy].isWall
         ) {
-          this.nodes[dx][dy].isVisited = true;
+          this.nodes[dx][dy].setVisited(true);
           this.nodes[dx][dy].parent = curNode;
           queue.push(this.nodes[dx][dy]);
         }
@@ -140,7 +140,7 @@ function Grid(rows, cols, x1, y1, x2, y2) {
   };
 
   this.gbfs = async function () {
-    this.nodes[this.start.x][this.start.y].isVisited = true;
+    this.nodes[this.start.x][this.start.y].setVisited(true);
     var queue = [];
 
     queue.push(this.nodes[this.start.x][this.start.y]);
@@ -165,7 +165,7 @@ function Grid(rows, cols, x1, y1, x2, y2) {
           !this.nodes[dx][dy].isVisited &&
           !this.nodes[dx][dy].isWall
         ) {
-          this.nodes[dx][dy].isVisited = true;
+          this.nodes[dx][dy].setVisited(true);
           this.nodes[dx][dy].parent = curNode;
           queue.push(this.nodes[dx][dy]);
         }
@@ -179,6 +179,7 @@ function Node(x, y, size, dist) {
   this.x = x;
   this.y = y;
   this.size = size;
+  this.s = size;
   this.dist = dist;
 
   this.parent;
@@ -188,7 +189,44 @@ function Node(x, y, size, dist) {
   this.isVisited = false;
   this.isWall = false;
 
+  this.setWall = async function (isWall) {
+    if (this.isWall != isWall) {
+      this.isWall = isWall;
+      if (!this.isStart && !this.isEnd)
+        for (let i = 0; i <= this.size; i++) {
+          await sleep(1).then(() => {
+            this.s = i;
+          });
+        }
+    }
+  };
+
+  this.setVisited = async function (isVisited) {
+    if (this.isVisited != isVisited) {
+      this.isVisited = isVisited;
+      if (!this.isStart && !this.isEnd)
+        for (let i = 0; i <= this.size; i++) {
+          await sleep(1).then(() => {
+            this.s = i;
+          });
+        }
+    }
+  };
+
+  this.setPath = async function (isPath) {
+    if (this.isPath != isPath) {
+      this.isPath = isPath;
+      if (!this.isStart && !this.isEnd)
+        for (let i = 0; i <= this.size; i++) {
+          await sleep(1).then(() => {
+            this.s = i;
+          });
+        }
+    }
+  };
+
   this.display = function () {
+    rectMode(CENTER);
     if (this.isStart) fill(0, 255, 0);
     else if (this.isEnd) fill(255, 0, 0);
     else if (this.isWall) fill(12, 53, 71);
@@ -196,6 +234,10 @@ function Node(x, y, size, dist) {
     else if (this.isVisited) fill(0, 190, 218);
     else noFill();
     stroke(175, 216, 248);
-    square(this.x * this.size, this.y * this.size, this.size);
+    square(
+      this.x * this.size + this.size / 2,
+      this.y * this.size + this.size / 2,
+      this.s
+    );
   };
 }
