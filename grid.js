@@ -71,6 +71,7 @@ class Grid {
             floor((y / height) * this.cols)
           );
           this.nodes[this.start.x][this.start.y].isStart = true;
+          this.nodes[this.start.x][this.start.y].isWall = false;
         } else if (n == -1) {
           this.nodes[this.end.x][this.end.y].isEnd = false;
           this.end = createVector(
@@ -78,6 +79,7 @@ class Grid {
             floor((y / height) * this.cols)
           );
           this.nodes[this.end.x][this.end.y].isEnd = true;
+          this.nodes[this.end.x][this.end.y].isWall = false;
           this.updateDist();
         }
       }
