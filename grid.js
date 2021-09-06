@@ -143,6 +143,8 @@ class Grid {
       while (stack.length > 0) {
         var curNode = stack.pop();
 
+        curNode.setVisited(true);
+        
         if (curNode === this.nodes[this.end.x][this.end.y]) break;
 
         for (let k = 0; k < 4; k++) {
@@ -156,7 +158,6 @@ class Grid {
             !this.nodes[dx][dy].isVisited &&
             !this.nodes[dx][dy].isWall
           ) {
-            this.nodes[dx][dy].setVisited(true);
             this.nodes[dx][dy].parent = curNode;
             stack.push(this.nodes[dx][dy]);
           }
@@ -211,6 +212,7 @@ class Grid {
         });
 
         var curNode = queue.shift();
+        
         if (curNode === this.nodes[this.end.x][this.end.y]) break;
 
         for (let k = 0; k < 4; k++) {
