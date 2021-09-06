@@ -14,12 +14,25 @@ class Grid {
     for (let i = 0; i < this.rows; i++) {
       this.nodes[i] = [];
       for (let j = 0; j < this.cols; j++) {
-        this.nodes[i][j] = new Node(i, j, this.size, dist(i, j, x2, y2));
+        this.nodes[i][j] = new Node(
+          i,
+          j,
+          this.size,
+          dist(i, j, this.end.x, this.end.y)
+        );
       }
     }
 
     this.nodes[x1][y1].isStart = true;
     this.nodes[x2][y2].isEnd = true;
+
+    this.updateDist = function () {
+      for (let i = 0; i < this.rows; i++) {
+        for (let j = 0; j < this.cols; j++) {
+          this.nodes[i][j].dist = dist(i, j, this.end.x, this.end.y);
+        }
+      }
+    };
 
     this.display = function () {
       for (let i = 0; i < this.rows; i++) {
@@ -34,6 +47,40 @@ class Grid {
         return !this.nodes[floor((x / width) * this.rows)][
           floor((y / height) * this.cols)
         ].isWall;
+    };
+
+    this.isStartEnd = function (x, y) {
+      if (x < width && y < height && x > 0 && y > 0)
+        return this.nodes[floor((x / width) * this.rows)][
+          floor((y / height) * this.cols)
+        ].isStart
+          ? 1
+          : this.nodes[floor((x / width) * this.rows)][
+              floor((y / height) * this.cols)
+            ].isEnd
+          ? -1
+          : 0;
+    };
+
+    this.moveNode = function (x, y, n) {
+      if (x < width && y < height && x > 0 && y > 0) {
+        if (n == 1) {
+          this.nodes[this.start.x][this.start.y].isStart = false;
+          this.start = createVector(
+            floor((x / width) * this.rows),
+            floor((y / height) * this.cols)
+          );
+          this.nodes[this.start.x][this.start.y].isStart = true;
+        } else if (n == -1) {
+          this.nodes[this.end.x][this.end.y].isEnd = false;
+          this.end = createVector(
+            floor((x / width) * this.rows),
+            floor((y / height) * this.cols)
+          );
+          this.nodes[this.end.x][this.end.y].isEnd = true;
+          this.updateDist();
+        }
+      }
     };
 
     this.onClick = function (x, y, wallMode) {

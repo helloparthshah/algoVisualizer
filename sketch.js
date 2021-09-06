@@ -5,6 +5,8 @@ var grid;
 
 var wallMode = true;
 
+var move = 0;
+
 function setup() {
   // put setup code here
   createCanvas(800, 800);
@@ -50,9 +52,14 @@ function mouseClicked() {
 
 function mousePressed() {
   wallMode = grid.getMode(mouseX, mouseY);
+  move = grid.isStartEnd(mouseX, mouseY);
 }
 
 function mouseDragged() {
+  if (move != 0) {
+    grid.moveNode(mouseX, mouseY, move);
+    return;
+  }
   if (mouseX >= 0 && mouseX <= width && mouseY >= 0 && mouseY <= height) {
     grid.onClick(mouseX, mouseY, wallMode);
   }
