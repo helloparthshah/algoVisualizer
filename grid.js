@@ -76,10 +76,9 @@ class Grid {
     this.showPath = async function () {
       var n = this.nodes[this.end.x][this.end.y];
       while (n && n.parent) {
-        await sleep(5).then(() => {
-          n.setPath(true);
-          n = n.parent;
-        });
+        n.setPath(true);
+        n = n.parent;
+        await sleep(5);
       }
     };
 
@@ -97,7 +96,6 @@ class Grid {
 
         if (curNode === this.nodes[this.end.x][this.end.y]) break;
 
-        await sleep(10);
         for (let k = 0; k < 4; k++) {
           let dx = curNode.x + X[k];
           let dy = curNode.y + Y[k];
@@ -114,6 +112,7 @@ class Grid {
             stack.push(this.nodes[dx][dy]);
           }
         }
+        await sleep(10);
       }
       await this.showPath();
     };
@@ -129,7 +128,6 @@ class Grid {
 
         if (curNode === this.nodes[this.end.x][this.end.y]) break;
 
-        await sleep(1);
         for (let k = 0; k < 4; k++) {
           let dx = curNode.x + X[k];
           let dy = curNode.y + Y[k];
@@ -146,6 +144,7 @@ class Grid {
             queue.push(this.nodes[dx][dy]);
           }
         }
+        await sleep(1);
       }
 
       await this.showPath();
@@ -165,7 +164,6 @@ class Grid {
         var curNode = queue.shift();
         if (curNode === this.nodes[this.end.x][this.end.y]) break;
 
-        await sleep(1);
         for (let k = 0; k < 4; k++) {
           let dx = curNode.x + X[k];
           let dy = curNode.y + Y[k];
@@ -182,6 +180,7 @@ class Grid {
             queue.push(this.nodes[dx][dy]);
           }
         }
+        await sleep(10);
       }
       await this.showPath();
     };
@@ -207,11 +206,9 @@ class Node {
       if (this.isWall != isWall) {
         this.isWall = isWall;
         if (!this.isStart && !this.isEnd) {
-          this.s = 0;
-          for (let i = 0; i <= this.size; i++) {
-            await sleep(1).then(() => {
-              this.s = i;
-            });
+          for (let i = this.size / 2; i <= this.size; i++) {
+            this.s = i;
+            await sleep(1);
           }
         }
       }
@@ -221,11 +218,9 @@ class Node {
       if (this.isVisited != isVisited) {
         this.isVisited = isVisited;
         if (!this.isStart && !this.isEnd) {
-          this.s = 0;
-          for (let i = 0; i <= this.size; i++) {
-            await sleep(1).then(() => {
-              this.s = i;
-            });
+          for (let i = this.size / 2; i <= this.size; i++) {
+            this.s = i;
+            await sleep(1);
           }
         }
       }
@@ -235,11 +230,9 @@ class Node {
       if (this.isPath != isPath) {
         this.isPath = isPath;
         if (!this.isStart && !this.isEnd) {
-          this.s = 0;
-          for (let i = 0; i <= this.size; i++) {
-            await sleep(1).then(() => {
-              this.s = i;
-            });
+          for (let i = this.size / 2; i <= this.size; i++) {
+            this.s = i;
+            await sleep(1);
           }
         }
       }
