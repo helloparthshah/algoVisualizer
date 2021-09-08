@@ -4,8 +4,8 @@ class Grid {
     this.cols = cols;
     this.size = width / this.rows;
 
-    this.start = createVector(0, 0);
-    this.end = createVector(this.rows - 1, this.cols - 1);
+    this.start = createVector(floor(rows / 4), floor(cols / 2));
+    this.end = createVector(floor((3 * rows) / 4), floor(cols / 2));
 
     this.isFinding = false;
 
@@ -27,13 +27,11 @@ class Grid {
     this.nodes[this.end.x][this.end.y].isEnd = true;
 
     this.dfsMaze = async function () {
-      this.isFinding = true;
-
       this.nodes[this.start.x][this.start.y].isStart = false;
       this.nodes[this.end.x][this.end.y].isEnd = false;
       for (let i = 0; i < this.rows; i++) {
         for (let j = 0; j < this.cols; j++) {
-          this.nodes[i][j].setWall(true);
+          this.nodes[i][j].isWall = true;
         }
       }
 
@@ -100,7 +98,6 @@ class Grid {
       }
       this.updateDist();
       this.clr();
-      this.isFinding = false;
     };
 
     this.updateDist = function () {
@@ -156,7 +153,6 @@ class Grid {
             floor((y / height) * this.cols)
           );
           this.nodes[this.start.x][this.start.y].isStart = true;
-          // this.nodes[this.start.x][this.start.y].isWall = false;
         } else if (n == -1) {
           this.nodes[this.end.x][this.end.y].isEnd = false;
           this.end = createVector(
@@ -164,7 +160,6 @@ class Grid {
             floor((y / height) * this.cols)
           );
           this.nodes[this.end.x][this.end.y].isEnd = true;
-          // this.nodes[this.end.x][this.end.y].isWall = false;
           this.updateDist();
         }
       }
@@ -201,7 +196,7 @@ class Grid {
       for (let i = 0; i < this.rows; i++) {
         for (let j = 0; j < this.cols; j++) {
           this.nodes[i][j].parent = null;
-          this.nodes[i][j].setVisited(false);
+          this.nodes[i][j].isVisited = false;
           this.nodes[i][j].isPath = false;
         }
       }
@@ -243,6 +238,7 @@ class Grid {
             !this.nodes[dx][dy].isVisited &&
             !this.nodes[dx][dy].isWall
           ) {
+            // this.nodes[dx][dy].setVisited(true);
             this.nodes[dx][dy].parent = curNode;
             stack.push(this.nodes[dx][dy]);
           }

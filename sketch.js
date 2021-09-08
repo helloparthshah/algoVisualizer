@@ -21,6 +21,19 @@ function reset() {
   }
 }
 
+function genMaze() {
+  if (!grid.isFinding) {
+    reset();
+    grid.isFinding = true;
+    b = document.getElementById("start");
+    b.style.backgroundColor = "red";
+    grid.dfsMaze().then(() => {
+      b.style.backgroundColor = "";
+      grid.isFinding = false;
+    });
+  }
+}
+
 function visualize() {
   let option = document.querySelector('input[name="item"]:checked').id;
   if (!grid.isFinding && option != "default") {
