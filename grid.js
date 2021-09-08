@@ -1,11 +1,11 @@
 class Grid {
-  constructor(rows, cols, x1, y1, x2, y2) {
+  constructor(rows, cols) {
     this.rows = rows;
     this.cols = cols;
     this.size = width / this.rows;
 
-    this.start = createVector(x1, y1);
-    this.end = createVector(x2, y2);
+    this.start = createVector(0, 0);
+    this.end = createVector(this.rows - 1, this.cols - 1);
 
     this.isFinding = false;
 
@@ -23,8 +23,85 @@ class Grid {
       }
     }
 
-    this.nodes[x1][y1].isStart = true;
-    this.nodes[x2][y2].isEnd = true;
+    this.nodes[this.start.x][this.start.y].isStart = true;
+    this.nodes[this.end.x][this.end.y].isEnd = true;
+
+    this.dfsMaze = async function () {
+      this.isFinding = true;
+
+      this.nodes[this.start.x][this.start.y].isStart = false;
+      this.nodes[this.end.x][this.end.y].isEnd = false;
+      for (let i = 0; i < this.rows; i++) {
+        for (let j = 0; j < this.cols; j++) {
+          this.nodes[i][j].setWall(true);
+        }
+      }
+
+      this.nodes[this.start.x][this.start.y].setVisited(true);
+      var stack = [];
+
+      stack.push(this.nodes[this.start.x][this.start.y]);
+
+      while (stack.length > 0) {
+        var curNode = stack.pop();
+
+        // curNode.setVisited(true);
+        let n = [];
+        for (let k = 0; k < 4; k++) {
+          let dx = curNode.x + X[k] * 2;
+          let dy = curNode.y + Y[k] * 2;
+          if (
+            dx >= 0 &&
+            dx < this.rows &&
+            dy >= 0 &&
+            dy < this.cols &&
+            !this.nodes[dx][dy].isVisited
+          )
+            n.push(this.nodes[dx][dy]);
+        }
+        if (n.length > 0) {
+          const rndInt = Math.floor(Math.random() * n.length);
+
+          for (let i = 0; i < n.length; i++) {
+            n[i].setVisited(true);
+            n[i].setWall(false);
+            this.nodes[(curNode.x + n[i].x) / 2][
+              (curNode.y + n[i].y) / 2
+            ].setVisited(true);
+
+            this.nodes[(curNode.x + n[i].x) / 2][
+              (curNode.y + n[i].y) / 2
+            ].setWall(false);
+
+            if (i != rndInt) stack.push(n[i]);
+          }
+
+          stack.push(n[rndInt]);
+        }
+        await sleep(1);
+      }
+      while (1) {
+        let i = Math.floor(Math.random() * this.rows);
+        let j = Math.floor(Math.random() * this.cols);
+        if (!this.nodes[i][j].isWall) {
+          this.nodes[i][j].isStart = true;
+          this.start = createVector(i, j);
+          break;
+        }
+      }
+      while (1) {
+        let i = Math.floor(Math.random() * this.rows);
+        let j = Math.floor(Math.random() * this.cols);
+        if (!this.nodes[i][j].isWall && !this.nodes[i][j].isEnd) {
+          this.nodes[i][j].isEnd = true;
+          this.end = createVector(i, j);
+          break;
+        }
+      }
+      this.updateDist();
+      this.clr();
+      this.isFinding = false;
+    };
 
     this.updateDist = function () {
       for (let i = 0; i < this.rows; i++) {
@@ -63,7 +140,15 @@ class Grid {
     };
 
     this.moveNode = function (x, y, n) {
-      if (x < width && y < height && x > 0 && y > 0) {
+      if (
+        x < width &&
+        y < height &&
+        x > 0 &&
+        y > 0 &&
+        this.nodes[floor((x / width) * this.rows)][
+          floor((y / height) * this.cols)
+        ].isWall == false
+      ) {
         if (n == 1) {
           this.nodes[this.start.x][this.start.y].isStart = false;
           this.start = createVector(
@@ -71,7 +156,7 @@ class Grid {
             floor((y / height) * this.cols)
           );
           this.nodes[this.start.x][this.start.y].isStart = true;
-          this.nodes[this.start.x][this.start.y].isWall = false;
+          // this.nodes[this.start.x][this.start.y].isWall = false;
         } else if (n == -1) {
           this.nodes[this.end.x][this.end.y].isEnd = false;
           this.end = createVector(
@@ -79,7 +164,7 @@ class Grid {
             floor((y / height) * this.cols)
           );
           this.nodes[this.end.x][this.end.y].isEnd = true;
-          this.nodes[this.end.x][this.end.y].isWall = false;
+          // this.nodes[this.end.x][this.end.y].isWall = false;
           this.updateDist();
         }
       }
@@ -116,7 +201,7 @@ class Grid {
       for (let i = 0; i < this.rows; i++) {
         for (let j = 0; j < this.cols; j++) {
           this.nodes[i][j].parent = null;
-          this.nodes[i][j].isVisited = false;
+          this.nodes[i][j].setVisited(false);
           this.nodes[i][j].isPath = false;
         }
       }
@@ -144,7 +229,7 @@ class Grid {
         var curNode = stack.pop();
 
         curNode.setVisited(true);
-        
+
         if (curNode === this.nodes[this.end.x][this.end.y]) break;
 
         for (let k = 0; k < 4; k++) {
@@ -212,7 +297,7 @@ class Grid {
         });
 
         var curNode = queue.shift();
-        
+
         if (curNode === this.nodes[this.end.x][this.end.y]) break;
 
         for (let k = 0; k < 4; k++) {

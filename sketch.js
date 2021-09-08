@@ -10,31 +10,35 @@ var move = 0;
 function setup() {
   // put setup code here
   createCanvas(800, 800);
-  grid = new Grid(20, 20, 0, 0, 19, 19);
+  grid = new Grid(30, 30);
+
   pixelDensity(1);
 }
 
-function vis(i) {
+function reset() {
   if (!grid.isFinding) {
-    if (i == 0) {
-      grid.reset();
-      return;
-    }
+    grid.reset();
+  }
+}
+
+function visualize() {
+  let option = document.querySelector('input[name="item"]:checked').id;
+  if (!grid.isFinding && option != "default") {
     grid.isFinding = true;
-    b = document.getElementsByTagName("button")[i];
+    b = document.getElementById("start");
     b.style.backgroundColor = "red";
     grid.clr();
-    if (i == 1)
+    if (option == "dfs")
       grid.dfs().then(() => {
         b.style.backgroundColor = "";
         grid.isFinding = false;
       });
-    else if (i == 2)
+    else if (option == "bfs")
       grid.bfs().then(() => {
         b.style.backgroundColor = "";
         grid.isFinding = false;
       });
-    else if (i == 3)
+    else if (option == "gbfs")
       grid.gbfs().then(() => {
         b.style.backgroundColor = "";
         grid.isFinding = false;
