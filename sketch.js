@@ -7,10 +7,26 @@ var wallMode = true;
 
 var move = 0;
 
+var h, w;
+
+var prevSearch = false;
+
+function preload() {
+  e = document.getElementById("canvas");
+  h = e.clientHeight;
+  w = e.clientWidth;
+}
+
 function setup() {
   // put setup code here
-  createCanvas(800, 800);
-  grid = new Grid(30, 30);
+  canvas = createCanvas(w, h);
+  canvas.parent("canvas");
+
+  for (let element of document.getElementsByClassName("p5Canvas")) {
+    element.addEventListener("contextmenu", (e) => e.preventDefault());
+  }
+
+  grid = new Grid(50);
 
   pixelDensity(1);
 }
@@ -34,30 +50,44 @@ function genMaze() {
   }
 }
 
-function visualize() {
-  let option = document.querySelector('input[name="item"]:checked').id;
-  if (!grid.isFinding && option != "default") {
-    grid.isFinding = true;
-    b = document.getElementById("start");
-    b.style.backgroundColor = "red";
-    grid.clr();
-    if (option == "dfs")
-      grid.dfs().then(() => {
-        b.style.backgroundColor = "";
-        grid.isFinding = false;
-      });
-    else if (option == "bfs")
-      grid.bfs().then(() => {
-        b.style.backgroundColor = "";
-        grid.isFinding = false;
-      });
-    else if (option == "gbfs")
-      grid.gbfs().then(() => {
-        b.style.backgroundColor = "";
-        grid.isFinding = false;
-      });
+function visualize(delay) {
+  if (delay > 0) prevSearch = true;
+  if (prevSearch) {
+    let option = document.querySelector('input[name="item"]:checked').id;
+    if (!grid.isFinding && option != "default") {
+      grid.isFinding = true;
+      b = document.getElementById("start");
+      b.style.backgroundColor = "red";
+      grid.clr();
+      if (option == "dfs")
+        grid.dfs(delay).then(() => {
+          b.style.backgroundColor = "";
+          grid.isFinding = false;
+        });
+      else if (option == "bfs")
+        grid.bfs(delay).then(() => {
+          b.style.backgroundColor = "";
+          grid.isFinding = false;
+        });
+      else if (option == "gbfs")
+        grid.gbfs(delay).then(() => {
+          b.style.backgroundColor = "";
+          grid.isFinding = false;
+        });
+      else if (option == "astar")
+        grid.astar(delay).then(() => {
+          b.style.backgroundColor = "";
+          grid.isFinding = false;
+        });
+      else if (option == "dijkstra")
+        grid.dijkstra(delay).then(() => {
+          b.style.backgroundColor = "";
+          grid.isFinding = false;
+        });
+    }
   }
 }
+
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }

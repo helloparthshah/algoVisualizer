@@ -15,9 +15,6 @@
   <div id="nav">
     <button onclick="reset()">Reset</button>
     <button onclick="genMaze()">Generate Maze</button>
-    <!--     <button onclick="vis(1)">Depth-First Search</button>
-    <button onclick="vis(2)">Breadth-First Search</button>
-    <button onclick="vis(3)">Greedy Best First Search</button> -->
 
     <details class="custom-select">
       <summary class="radios">
@@ -25,6 +22,8 @@
         <input type="radio" name="item" id="dfs" title="Depth-First Search">
         <input type="radio" name="item" id="bfs" title="Breadth-First Search">
         <input type="radio" name="item" id="gbfs" title="Greedy Best First Search">
+        <input type="radio" name="item" id="astar" title="A* Search">
+        <input type="radio" name="item" id="dijkstra" title="Dijkstra Algorithm">
       </summary>
       <ul class="list">
         <li>
@@ -36,10 +35,18 @@
         <li>
           <label for="gbfs">Greedy Best First Search</label>
         </li>
+        <li>
+          <label for="astar">A* Search</label>
+        </li>
+        <li>
+          <label for="dijkstra">Dijkstra Algorithm</label>
+        </li>
       </ul>
     </details>
-    <button id="start" onclick="visualize()">Start</button>
+    <button id="start" onclick="visualize(1)">Start</button>
   </div>
+
+  <div id="canvas"></div>
 </body>
 
 </html>

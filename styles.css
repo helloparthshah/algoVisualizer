@@ -7,10 +7,17 @@ html {
 body {
   display: flex;
   align-items: center;
-  justify-content: center;
   height: 100vh;
+  width: 100vw;
   flex-direction: column;
   color: black;
+  overflow: hidden;
+  justify-content: space-between;
+}
+
+#canvas {
+  height: 100%;
+  width: 100vw;
 }
 
 button {
@@ -34,7 +41,7 @@ button:hover {
 
 #nav {
   top: 0;
-  position: fixed;
+  /* position: sticky; */
   width: 100vw;
   background-color: #282a35;
   display: flex;
