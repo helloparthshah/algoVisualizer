@@ -3,7 +3,7 @@ p5.disableFriendlyErrors = true;
 
 var grid;
 
-var wallMode = true;
+var mode = true;
 
 var move = 0;
 
@@ -93,12 +93,15 @@ function sleep(ms) {
 }
 
 function mouseClicked() {
-  wallMode = grid.getMode(mouseX, mouseY);
-  grid.onClick(mouseX, mouseY, wallMode);
+  mode = grid.getMode(mouseX, mouseY);
+  if (mouseButton == LEFT)
+    grid.setWall(mouseX, mouseY, mode);
+  if (mouseButton == RIGHT)
+    grid.setWeight(mouseX, mouseY, mode);
 }
 
 function mousePressed() {
-  wallMode = grid.getMode(mouseX, mouseY);
+  mode = grid.getMode(mouseX, mouseY);
   move = grid.isStartEnd(mouseX, mouseY);
 }
 
@@ -108,13 +111,14 @@ function mouseDragged() {
     return;
   }
   if (mouseX >= 0 && mouseX <= width && mouseY >= 0 && mouseY <= height) {
-    grid.onClick(mouseX, mouseY, wallMode);
+    if (mouseButton == LEFT)
+      grid.setWall(mouseX, mouseY, mode);
+    if (mouseButton == RIGHT)
+      grid.setWeight(mouseX, mouseY, mode);
   }
 }
 
 function draw() {
-  // put drawing code here
-  // background(255);
   clear();
   grid.display();
 }

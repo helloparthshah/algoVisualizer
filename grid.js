@@ -128,22 +128,24 @@ class Grid {
 
   getMode = function (x, y) {
     if (x < width && y < height && x > 0 && y > 0)
-      return !this.nodes[floor((x / width) * this.rows)][
+      return !(this.nodes[floor((x / width) * this.rows)][
         floor((y / height) * this.cols)
-      ].isWall;
+      ].isWall || this.nodes[floor((x / width) * this.rows)][
+        floor((y / height) * this.cols)
+      ].isWeight);
   };
 
   isStartEnd = function (x, y) {
     if (x < width && y < height && x > 0 && y > 0)
       return this.nodes[floor((x / width) * this.rows)][
-        floor((y / height) * this.cols)
-      ].isStart
-        ? 1
-        : this.nodes[floor((x / width) * this.rows)][
-            floor((y / height) * this.cols)
-          ].isEnd
-        ? -1
-        : 0;
+          floor((y / height) * this.cols)
+        ].isStart ?
+        1 :
+        this.nodes[floor((x / width) * this.rows)][
+          floor((y / height) * this.cols)
+        ].isEnd ?
+        -1 :
+        0;
   };
 
   moveNode = function (x, y, n) {
@@ -178,7 +180,7 @@ class Grid {
     }
   };
 
-  onClick = function (x, y, wallMode) {
+  setWall = function (x, y, mode) {
     if (x < width && y < height && x > 0 && y > 0)
       if (
         !this.nodes[floor((x / width) * this.rows)][
@@ -190,7 +192,24 @@ class Grid {
       ) {
         this.nodes[floor((x / width) * this.rows)][
           floor((y / height) * this.cols)
-        ].setWall(wallMode, 1);
+        ].setWall(mode, 1);
+        visualize(0);
+      }
+  };
+
+  setWeight = function (x, y, mode) {
+    if (x < width && y < height && x > 0 && y > 0)
+      if (
+        !this.nodes[floor((x / width) * this.rows)][
+          floor((y / height) * this.cols)
+        ].isStart &&
+        !this.nodes[floor((x / width) * this.rows)][
+          floor((y / height) * this.cols)
+        ].isEnd
+      ) {
+        this.nodes[floor((x / width) * this.rows)][
+          floor((y / height) * this.cols)
+        ].setWeight(mode, 1);
         visualize(0);
       }
   };
@@ -201,6 +220,7 @@ class Grid {
         this.nodes[i][j].parent = null;
         this.nodes[i][j].isVisited = false;
         this.nodes[i][j].isPath = false;
+        this.nodes[i][j].isWeight = false;
         this.nodes[i][j].isWall = false;
       }
     }
@@ -428,6 +448,7 @@ class Node {
   setWeight = async function (isWeight, delay) {
     if (this.isWeight != isWeight) {
       this.isWeight = isWeight;
+      this.isWall = false;
       this.cost = 10;
       if (!this.isStart && !this.isEnd) {
         for (let i = this.size / 2; i <= this.size; i += 2) {
@@ -441,6 +462,7 @@ class Node {
   setWall = async function (isWall, delay) {
     if (this.isWall != isWall) {
       this.isWall = isWall;
+      this.isWeight = false;
       if (!this.isStart && !this.isEnd) {
         for (let i = this.size / 2; i <= this.size; i += 2) {
           this.s = i;
@@ -479,8 +501,8 @@ class Node {
     if (this.isStart) fill(0, 255, 0);
     else if (this.isEnd) fill(255, 0, 0);
     else if (this.isWall) fill(12, 53, 71);
-    else if (this.isWeight) fill(76, 175, 80);
     else if (this.isPath) fill(255, 254, 106);
+    else if (this.isWeight) fill(76, 175, 80);
     else if (this.isVisited) fill(0, 190, 218);
     else noFill();
     stroke(175, 216, 248);
